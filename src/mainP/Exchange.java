@@ -110,14 +110,14 @@ public class Exchange {
 		Collections.sort(buyOrders, new Comparator<Order>() {
 			@Override
 			public int compare(Order o1, Order o2) {
-				return Double.compare(o1.bid, o2.bid);
+				return Double.compare(o2.bid, o1.bid);
 			}	
 		});
 		
 		Collections.sort(sellOrders, new Comparator<Order>() {
 			@Override
 			public int compare(Order o1, Order o2) {
-				return Double.compare(o2.bid, o1.bid);
+				return Double.compare(o1.bid, o2.bid);
 			}
 		});
 		
@@ -149,7 +149,16 @@ public class Exchange {
 		*/
 		
 		OrderBook oBook = makeOrderBook(shares.get(0),10,0.1);
+		ArrayList checkB = oBook.buyOrders;
+		ArrayList checkS = oBook.sellOrders;
 		
+		for(int i=0;i<checkB.size();i++) {
+			System.out.println(checkB.get(i).toString());
+		}
+		for(int i=0;i<checkS.size();i++) {
+			System.out.println(checkS.get(i).toString());
+		}
+				
 	}
 
 }

@@ -12,5 +12,9 @@ public class OrderBook {
 		this.buyOrders = buyOrders;
 		this.sellOrders = sellOrders;
 	}
+	
+	public String toString() {
+		return "";
+	}
 
 }

@@ -193,14 +193,22 @@ public class Exchange {
 	
 	
 	public static void main(String[] args) {
-		ArrayList<SharePrice> shares = makeShareList(10);
+		//Creating 100 random shares
+		
+		ArrayList<SharePrice> shares = makeShareList(100);
+		//Uncomment below to print out all stocks
+		/*
 		System.out.println("Array Size: "+shares.size());
 		for(int i=0;i<shares.size();i++) {
 			System.out.println(shares.get(i).toString());
 		}
+		*/
+		System.out.println("Share stats");
 		System.out.println("Average Price: $"+aveShareP(shares));
 		System.out.println("Max Price: $"+maxShareP(shares));
 		System.out.println("Min Price: $"+minShareP(shares));
+		
+		System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
 		/*
 		Order testO = new Order(Order.tradeType.BUY,"AZN", 23.3,10);
 		System.out.println(testO.toString());
@@ -214,12 +222,20 @@ public class Exchange {
 		System.out.println(testMakeOrder.toString());
 		*/
 		
-		OrderBook oBook = makeOrderBook(shares.get(0),10,0.1);
-		oBook.printBook();
+		//Creating 30 order books with 50 buy and sell orders
+		ArrayList<OrderBook> myBooks = new ArrayList<OrderBook>();
+		for(int i=0;i<30;i++) {
+			myBooks.add(makeOrderBook(shares.get(i),50,0.1));
+		}
 		
-		ArrayList newTrades = oBook.matchBandS();
-		ArrayList checkB = oBook.buyOrders;
-		ArrayList checkS = oBook.sellOrders;
+		//OrderBook oBook = makeOrderBook(shares.get(0),10,0.1);
+		//Printing an order book
+		myBooks.get(0).printBook();
+		
+		//Mathcing buyers and sellers for an orderbook
+		ArrayList newTrades = myBooks.get(0).matchBandS();
+		//ArrayList checkB = oBook.buyOrders;
+		//ArrayList checkS = oBook.sellOrders;
 		
 		System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
 		/*
@@ -233,7 +249,8 @@ public class Exchange {
 			System.out.println(newTrades.get(i).toString());
 		}
 		*/
-		oBook.printBook();
+		//Print orderbook post matching and dispay stats
+		myBooks.get(0).printBook();
 		System.out.println("Average Price Per Stock: $"+avePperStock(newTrades));
 		System.out.println("Max Price Per Stock: $"+maxPperStock(newTrades));
 		System.out.println("Min Price Per Stock: $"+minPperStock(newTrades));

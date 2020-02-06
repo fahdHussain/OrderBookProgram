@@ -4,6 +4,7 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
@@ -12,6 +13,7 @@ public class Exchange {
 	
 	public static Random random = new Random();
 	
+//Q1 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	public static SharePrice rndShare() {
 		//Creates random share with random  price
 		String charSet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -21,6 +23,7 @@ public class Exchange {
 			char rndChar  = charSet.charAt(rndCharIndex);
 			sb.append(rndChar);
 		}
+		//share price limited between 0.01 and 1000 for simplicity
 		double sharePrice = 0.01 +(1000 - 0.01) *random.nextDouble();
 		sharePrice = Math.round(sharePrice * 100d)/100d;
 		String shareName = sb.toString();
@@ -29,6 +32,7 @@ public class Exchange {
 	}
 	
 	public static ArrayList<SharePrice> makeShareList(int size) {
+		//Generates list of shares with given size
 		ArrayList<SharePrice> shareList = new ArrayList<SharePrice>();
 		HashSet<String> shareNames = new HashSet<String>(size);
 		for(int i=0;i<size;i++) {
@@ -44,8 +48,11 @@ public class Exchange {
 		}
 		return shareList;
 	}
+
+//Q2 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	
 	public static double aveShareP(ArrayList<SharePrice> shares) {
+		//find average share price
 		double sum = 0;
 		for(int i=0;i<shares.size();i++) {
 			sum = sum +shares.get(i).sharePrice;
@@ -54,6 +61,7 @@ public class Exchange {
 	}
 	
 	public static double maxShareP(ArrayList<SharePrice> shares) {
+		//find max share price
 		double max = shares.get(0).sharePrice;
 		for(int i=0;i<shares.size();i++) {
 			if(shares.get(i).sharePrice > max) {
@@ -64,6 +72,7 @@ public class Exchange {
 	}
 	
 	public static double minShareP(ArrayList<SharePrice> shares) {
+		//find min share price
 		double min = shares.get(0).sharePrice;
 		for(int i=0;i<shares.size();i++) {
 			if(shares.get(i).sharePrice < min) {
@@ -73,7 +82,9 @@ public class Exchange {
 		return min;
 	}
 
+//Q3 a)
 	public static Order makeOrder(SharePrice share, double spread, Order.tradeType type) {
+		//Create an order for a share with a random spread
 		Random r = new Random();
 		
 		double bidDiff = Math.round(spread*r.nextDouble()*100d)/100d;
@@ -96,6 +107,7 @@ public class Exchange {
 	
 	
 	public static OrderBook makeOrderBook(SharePrice share, int numOrders, double spread) {
+		//Create an orderbook
 		
 		ArrayList<Order> buyOrders = new ArrayList<Order>();
 		ArrayList<Order> sellOrders = new ArrayList<Order>();
@@ -106,7 +118,7 @@ public class Exchange {
 			Order sellOrder = makeOrder(share, spread, Order.tradeType.SELL);
 			sellOrders.add(sellOrder);
 		}
-		
+		//Sort buy and sells
 		Collections.sort(buyOrders, new Comparator<Order>() {
 			@Override
 			public int compare(Order o1, Order o2) {
@@ -124,6 +136,60 @@ public class Exchange {
 		OrderBook theBook = new OrderBook(share, buyOrders, sellOrders);
 		return theBook;
 	}
+	
+	//Find min,max, ave price per stock
+	public static double avePperStock(ArrayList<Order> orders) {
+		//find average share price
+		double sum = 0;
+		for(int i=0;i<orders.size();i++) {
+			sum = sum +orders.get(i).bid;
+		}
+		return Math.round((sum/orders.size())*100d)/100d;
+	}
+	
+	public static double maxPperStock(ArrayList<Order> orders) {
+		//find max share price
+		double max = orders.get(0).bid;
+		for(int i=0;i<orders.size();i++) {
+			if(orders.get(i).bid > max) {
+				max = orders.get(i).bid;
+			}
+		}
+		return max;
+	}
+	
+	public static double minPperStock(ArrayList<Order> orders) {
+		//find min share price
+		double min = orders.get(0).bid;
+		for(int i=0;i<orders.size();i++) {
+			if(orders.get(i).bid < min) {
+				min = orders.get(i).bid;
+			}
+		}
+		return min;
+	}
+	
+	public static void closestOrders(ArrayList<Order> trades) {
+		long minDiff = 100000000000l;
+		Order trade1 = trades.get(0);
+		Order trade2 = trades.get(1);
+		for(int i=0;i<trades.size();i++) {
+			Date fDate = trades.get(i).orderDate;
+			for(int j=0;j<trades.size();j++) {
+				if(trades.get(i) == trades.get(j)) {
+					continue;
+				}else if((fDate.getTime() - trades.get(j).orderDate.getTime())<minDiff) {
+					minDiff = fDate.getTime() - trades.get(j).orderDate.getTime();
+					trade1 = trades.get(i);
+					trade2 = trades.get(j);
+				}
+			}
+		}
+		System.out.println("Closest orders: ");
+		System.out.println(trade1.toString());
+		System.out.println(trade2.toString());
+	}
+	
 	
 	
 	public static void main(String[] args) {
@@ -168,6 +234,11 @@ public class Exchange {
 		}
 		*/
 		oBook.printBook();
+		System.out.println("Average Price Per Stock: $"+avePperStock(newTrades));
+		System.out.println("Max Price Per Stock: $"+maxPperStock(newTrades));
+		System.out.println("Min Price Per Stock: $"+minPperStock(newTrades));
+		
+		closestOrders(newTrades);
 	}
 
 }

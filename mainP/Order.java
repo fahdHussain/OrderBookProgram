@@ -24,6 +24,10 @@ public class Order {
 		orderDate = new Date();
 	}
 	
+	public void subQuantity(int sub) {
+		this.quantity = this.quantity - sub;
+	}
+	
 	
 	public String toString() {
 		return(type+" "+stock+": $"+bid+" @ "+quantity+", "+orderDate);

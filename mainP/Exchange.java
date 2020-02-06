@@ -149,16 +149,25 @@ public class Exchange {
 		*/
 		
 		OrderBook oBook = makeOrderBook(shares.get(0),10,0.1);
+		oBook.printBook();
+		
+		ArrayList newTrades = oBook.matchBandS();
 		ArrayList checkB = oBook.buyOrders;
 		ArrayList checkS = oBook.sellOrders;
 		
+		System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+		/*
 		for(int i=0;i<checkB.size();i++) {
 			System.out.println(checkB.get(i).toString());
 		}
 		for(int i=0;i<checkS.size();i++) {
 			System.out.println(checkS.get(i).toString());
 		}
-				
+		for(int i=0;i<newTrades.size();i++) {
+			System.out.println(newTrades.get(i).toString());
+		}
+		*/
+		oBook.printBook();
 	}
 
 }
